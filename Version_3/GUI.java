@@ -30,31 +30,27 @@ public class GUI extends JFrame {
 	JPanel topPanel = new JPanel();
 	JPanel bottomPanel = new JPanel();
 	Container mainContainer = this.getContentPane();
-	int games[][][];	
-	int gameNumber=0;
+	int games[][][];
+	int gameNumber = 0;
 	int totalGames;
-	
-	
-
-	public GUI(String title, int [][][] g) {
+//------------------------------------------------------------------------------------------------
+//Constructor
+	public GUI(String title, int[][][] g) {
+		
 		// sets up main container
 		super(title);
 		this.setSize(500, 550);
 		this.setLocation(100, 100);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		games=g;
-
-
-		totalGames=games.length;
-
-		// initializers and setup
-
 		mainContainer.setLayout(new BorderLayout(5, 5));
 		mainContainer.setBackground(Color.white);
 		this.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.white));
 
-		// panel with buttons added to main container
+		//initializes the 3D matrix to which different sudoku games are stored
+		games = g;
+		totalGames = games.length;
+
+		//sets up panel that contains buttons
 		topPanel.setBorder(new LineBorder(Color.black, 3));
 		topPanel.setBackground(Color.black);
 		topPanel.setLayout(new GridLayout(1, 2, 50, 5));
@@ -65,7 +61,7 @@ public class GUI extends JFrame {
 		topPanel.add(button2);
 		mainContainer.add(topPanel, BorderLayout.NORTH);
 
-		// adds group to main panel which is added to main container
+		//sets up bottom panel where the game is displayed
 		bottomPanel.setBorder(new LineBorder(Color.black, 3));
 		bottomPanel.setBackground(Color.black);
 		bottomPanel.setLayout(new GridLayout(3, 3, 5, 5));
@@ -75,8 +71,6 @@ public class GUI extends JFrame {
 			panels[i].setBackground(Color.black);
 			bottomPanel.add(panels[i]);
 		}
-
-		// adds 9 cells to each group
 		int row;
 		int col;
 		for (int i = 0; i < 9; i++) {
@@ -88,46 +82,25 @@ public class GUI extends JFrame {
 				panels[row * 3 + col].add(cells[i][j]);
 			}
 		}
-		// ---------------------------------------------------------------------
+		
+		//places the sudoku game on the panel 
 		setupGame();
-//		for (int i = 0; i < 9; i++) {
-//			for (int j = 0; j < 9; j++) {
-//
-//				if (game.getOrig(i, j) != 0) {
-//					String temp = String.valueOf(game.getOrig(i, j));
-//					labels[i][j] = new JLabel(temp);
-//					labels[i][j].setHorizontalAlignment(JLabel.CENTER);
-//					labels[i][j].setFont(new Font("Courier", Font.BOLD, 20));
-//					labels[i][j].setOpaque(true);
-//					labels[i][j].setBackground(Color.lightGray);
-//					cells[i][j].add(labels[i][j]);
-//				} else {
-//					texts[i][j] = new JTextField("");
-//					texts[i][j].setHorizontalAlignment(JTextField.CENTER);// centers text
-//					texts[i][j].setFont(new Font("Courier", Font.BOLD, 20));
-//					// tFields[i][j].setForeground(Color.blue);
-//					cells[i][j].add(texts[i][j]);
-//				}
-//			}
-//		}
 		mainContainer.add(bottomPanel);
 	}
-	//----------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
+//for toggle check button
 	boolean finished = true;
 	class check implements ActionListener {// toggle button
 		boolean on = true;
-
-		check() {
-		}
+		check() {}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {//turns wrong and non-empty cells red
 			// TODO Auto-generated method stub
 			if (on) {
 				on = false;
 				button1.setText("Check: Toggle On");
 				button2.setEnabled(false);
-				// turns wrong text red
 				for (int i = 0; i < 9; i++) {
 					for (int j = 0; j < 9; j++) {
 						if (gameSudoku.getOrig(i, j) == 0) {// only check non original numbers
@@ -144,7 +117,7 @@ public class GUI extends JFrame {
 					}
 				}
 				if (finished) {
-					String name = JOptionPane.showInputDialog(mainContainer,"Yayy!!!, you're done!!!" ,null);
+					String name = JOptionPane.showInputDialog(mainContainer, "Yayy!!!, you're done!!!", null);
 					solve newSolve = new solve();
 					newSolve.actionPerformed(e);
 				}
@@ -163,10 +136,10 @@ public class GUI extends JFrame {
 			}
 		}
 	}
-
+//------------------------------------------------------------------------------------------------
+//for the give up option
 	class solve implements ActionListener {
-		solve() {
-		}
+		solve() {}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -194,7 +167,9 @@ public class GUI extends JFrame {
 			revalidate();
 		}
 	}
-
+	
+//------------------------------------------------------------------------------------------------
+//for new-game button
 	class newGame implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -212,12 +187,13 @@ public class GUI extends JFrame {
 			repaint();
 			revalidate();
 		}
-
 	}
 	
+//------------------------------------------------------------------------------------------------
+//places the Sudoku board on the panels
 	private void setupGame() {
-		if(gameNumber==totalGames) {
-			String name = JOptionPane.showInputDialog(mainContainer,"Out of new games ):",null);
+		if (gameNumber == totalGames) {
+			String name = JOptionPane.showInputDialog(mainContainer, "Out of new games ):", null);
 			System.exit(0);
 		}
 		gameSudoku.changePuzzle(games[gameNumber]);
